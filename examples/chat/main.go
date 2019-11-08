@@ -61,7 +61,7 @@ func main() {
 		if httpErr != nil {
 			log.Fatal("The process exited with http error: ", httpErr.Error())
 		}
-	}*/
+	}
 	/*flag.Parse()
 	http.HandleFunc("/", hello)
 	fmt.Println("listen on ", *addr)
