@@ -11,32 +11,39 @@ import (
 	"os"
 	"fmt"
 	"io"
+	"path/filepath"
 )
 
 var addr = flag.String("addr", ":"+os.Getenv("PORT"), "http service address")
 var cert = flag.String("cert", "./algo.crt", "certificate to be used")
 var key = flag.String("key", "./algo.key", "certificate key to be used")
 
-func serveIndex(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.URL)
-	http.ServeFile(w, r, "home.html")
-}
-
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
-	if r.URL.Path != "/" {
-		http.Error(w, "Not found: "+r.URL.Path, http.StatusNotFound)
-		return
-	}
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	http.ServeFile(w, r, "home.html")
+	http.ServeFile(w, r, "./home.html")
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Hello World!")
+
+	var files []string
+
+    root := "./"
+    err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+        files = append(files, path)
+        return nil
+    })
+    if err != nil {
+        panic(err)
+    }
+    for _, file := range files {
+		io.WriteString(w, file)
+		io.WriteString(w, "\n")
+    }
 }
 
 func main() {
