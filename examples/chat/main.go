@@ -12,7 +12,7 @@ import (
 	"fmt"
 )
 
-var addr = flag.String("addr", ":8080", "http service address")
+var addr = flag.String("addr", os.Getenv("PORT"), "http service address")
 var cert = flag.String("cert", "./algo.crt", "certificate to be used")
 var key = flag.String("key", "./algo.key", "certificate key to be used")
 
