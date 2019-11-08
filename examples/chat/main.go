@@ -16,6 +16,11 @@ var addr = flag.String("addr", ":"+os.Getenv("PORT"), "http service address")
 var cert = flag.String("cert", "./algo.crt", "certificate to be used")
 var key = flag.String("key", "./algo.key", "certificate key to be used")
 
+func serveIndex(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.URL)
+	http.ServeFile(w, r, "home.html")
+}
+
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
 	if r.URL.Path != "/" {
@@ -33,7 +38,8 @@ func main() {
 	flag.Parse()
 	hub := newHub()
 	go hub.run()
-	http.HandleFunc("/", serveHome)
+	http.HandleFunc("/", serveIndex)
+	http.HandleFunc("/home", serveHome)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
