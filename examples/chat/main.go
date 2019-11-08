@@ -19,7 +19,7 @@ var key = flag.String("key", "./algo.key", "certificate key to be used")
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
 	if r.URL.Path != "/" {
-		http.Error(w, "Not found: "+ r.Url, http.StatusNotFound)
+		http.Error(w, "Not found: "+ r.URL, http.StatusNotFound)
 		return
 	}
 	if r.Method != "GET" {
