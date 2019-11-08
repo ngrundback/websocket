@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"fmt"
+	"io"
 )
 
 var addr = flag.String("addr", ":"+os.Getenv("PORT"), "http service address")
@@ -34,8 +35,12 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "home.html")
 }
 
+func hello(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "Hello World!")
+}
+
 func main() {
-	flag.Parse()
+	/*flag.Parse()
 	hub := newHub()
 	go hub.run()
 	http.HandleFunc("/", serveIndex)
@@ -56,5 +61,9 @@ func main() {
 		if httpErr != nil {
 			log.Fatal("The process exited with http error: ", httpErr.Error())
 		}
-	}
+	}*/
+	flag.Parse()
+	http.HandleFunc("/", hello)
+	fmt.Println("listen on ", *addr)
+	http.ListenAndServe(*addr, nil)
 }
