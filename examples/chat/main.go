@@ -40,10 +40,10 @@ func hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	/*flag.Parse()
+	flag.Parse()
 	hub := newHub()
 	go hub.run()
-	http.HandleFunc("/", serveIndex)
+	http.HandleFunc("/", hello)
 	http.HandleFunc("/home", serveHome)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
@@ -62,8 +62,8 @@ func main() {
 			log.Fatal("The process exited with http error: ", httpErr.Error())
 		}
 	}*/
-	flag.Parse()
+	/*flag.Parse()
 	http.HandleFunc("/", hello)
 	fmt.Println("listen on ", *addr)
-	http.ListenAndServe(*addr, nil)
+	http.ListenAndServe(*addr, nil)*/
 }
