@@ -8,9 +8,13 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
+	"fmt"
 )
 
 var addr = flag.String("addr", ":8080", "http service address")
+var cert = flag.String("cert", "./algo.crt", "certificate to be used")
+var key = flag.String("key", "./algo.key", "certificate key to be used")
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
@@ -33,8 +37,18 @@ func main() {
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
-	err := http.ListenAndServe(*addr, nil)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+
+	var httpErr error
+	if _, err := os.Stat(*cert); err == nil {
+		fmt.Println(*cert, " found. Switching to https")
+		if httpErr = http.ListenAndServeTLS(*addr, *cert, *key, nil); httpErr != nil {
+			log.Fatal("The process exited with https error: ", httpErr.Error())
+		}
+	} else {
+		fmt.Println("No cert, using http")
+		httpErr = http.ListenAndServe(*addr, nil)
+		if httpErr != nil {
+			log.Fatal("The process exited with http error: ", httpErr.Error())
+		}
 	}
 }
